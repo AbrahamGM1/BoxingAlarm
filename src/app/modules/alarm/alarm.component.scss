@@ -24,18 +24,20 @@
             padding-top: 20px;
             border-radius: 16px;
             background-color: rgb(182, 255, 146);
-            justify-content: center;
-
-            & span {
-                display: inline-block;
-                width: 70px;
-                text-align: center;
-            }
 
         }
 
         .minutes{
-            flex-direction: flex-end;
+            justify-content: flex-end;
+            & span {
+                margin-right: 1rem;
+            }
+        }
+
+        .seconds{
+            & span {
+                margin-left: 1rem;
+            }
         }
     }
 
