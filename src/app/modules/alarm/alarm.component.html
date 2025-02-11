@@ -1,11 +1,26 @@
 <div class="content">
 
-    <div class="timer">
-        <b><p>00:00</p></b>
+    <div class="chart">
+
     </div>
 
-    <div class="button">
+    <div class="timer">
+        <div class="minutes">
+            <b><span>{{tenminutes}}</span><span>{{minutes}}</span></b>
+        </div>
+        <span>:</span>
+        <div class="seconds">
+            <b><span>{{tenseconds}}</span><span>{{seconds}}</span></b>
+        </div>
+    </div>
 
+    <div class="round">
+        <b><p>ROUND 1 OF 10</p></b>
+    </div>
+
+    <div class="buttons">
+        <button><b>RESET</b></button>
+        <button><b>NEXT ROUND</b></button>
     </div>
 
 </div>

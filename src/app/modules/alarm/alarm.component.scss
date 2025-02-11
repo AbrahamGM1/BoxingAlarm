@@ -1,10 +1,75 @@
 .content{
     width: 100%;
-    background-color: aqua;
+
+    .chart {
+        width: 256px;
+        height: 256px;
+        background-color: rgb(182, 255, 146);
+        border-radius: 100%;
+        margin: 0 auto;
+    }
 
     .timer {
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 96px;
+        margin-top: 1rem;
+
+
+        .minutes,.seconds{
+            display: flex;
+            width: 152px;
+            height: 100px;
+            padding-top: 20px;
+            border-radius: 16px;
+            background-color: rgb(182, 255, 146);
+            justify-content: center;
+
+            & span {
+                display: inline-block;
+                width: 70px;
+                text-align: center;
+            }
+
+        }
+
+        .minutes{
+            flex-direction: flex-end;
+        }
+    }
+
+    .round{
+        display: flex;
+        justify-content: center;
+        font-size: 48px;
+        
+        & p {
+            margin: 1rem;
+        }
+    }
+
+    .buttons{
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        gap: 1rem;
+
+        & button {
+            width:20%;
+            height: 3rem;
+            cursor: pointer;
+            border: none;
+            color: greenyellow;
+            background-color: green;
+            font-size: larger;
+            font-style: italic;
+            font-family: 'Tomorrow',sans-serif;
+            border-radius: 8px;
+        }
+        & button:hover{
+            background-color: greenyellow;
+            color: green;
+        }
     }
 }
