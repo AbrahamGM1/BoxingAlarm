@@ -13,14 +13,19 @@ export class AlarmComponent {
 
 
   realseconds:number = 0;
-  realminutes:number = 2;
+  realminutes:number = 1;
 
 
   //Realtime es todos los minutos en segundos para hacer la conversion
   //del porcentaje de la gráfica que se va a ir reduciendo
-  realtime: number = 120;
+  realtime: number = this.realminutes*60;
   progressvalue: number = 0;
-  percentage: number = 100;
+  percentage: number = 0;
+  onepercent: number = 100/this.realtime;
+  //incremento hara que onepercent aumente de 1% en 1% sin que haga sumas exponenciales
+  increment: number = this.onepercent;
+  aux: number = this.realtime-this.onepercent;
+  isrunning: boolean = true;
 
   private subscription!: Subscription;
 
@@ -34,26 +39,43 @@ export class AlarmComponent {
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.stop()
   }
 
 
   start(){
-    this.subscription = interval(1000).subscribe(() => {
-          /* Empiezas con segundos en 0 y unos minutos establecidos, al empezar
+    this.isrunning = true;
+    this.subscription = interval(100).subscribe(() => {
+    /* Empiezas con segundos en 0 y unos minutos establecidos, al empezar
     tienes que comprobar que haya 1 minuto como mínimo y 0 segundos */
+
     if (this.realminutes>0 && this.realseconds == 0) {
       this.realminutes -= 1;
       //60 porque justo abajo se lo va a restar
       this.realseconds = 60;
     }
 
+
     //Resta un segundo
     this.realseconds -=1;
+    this.realtime -=1;
+
+    //aumenta el porcentaje segun el progreso que le corresponda cada segundo
+    this.percentage+=this.onepercent
+
+    //Cuando se acabe el tiempo se detiene el round
+    if (this.realtime<=0) {
+      this.stop()
+    }
 
     })
+  }
+
+  stop(){
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+      this.isrunning = false;
+    }
   }
 
 }
