@@ -4,7 +4,8 @@
     .chart {
         width: 256px;
         height: 256px;
-        background-color: rgb(182, 255, 146);
+        //background-color:rgb(182, 255, 146);
+        background:conic-gradient( white 3.6deg, rgb(182, 255, 146) 0deg);
         border-radius: 100%;
         margin: 0 auto;
     }
