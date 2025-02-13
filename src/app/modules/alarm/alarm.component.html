@@ -1,15 +1,15 @@
-<div class="content">
+<div class="content" [ngStyle]="{'background-color': bgstatus}">
 
-    <div class="chart" [ngStyle]="{'background': 'conic-gradient( #daffeb calc((3.6deg)*'+percentage+'), rgb(182, 255, 146) 0deg)'}">
+    <div class="chart" [ngStyle]="{'background': 'conic-gradient(transparent calc((3.6deg)*'+percentage+'), '+status+' 0deg)'}">
 
     </div>
 
     <div class="timer">
-        <div class="minutes">
+        <div class="minutes" [ngStyle]="{'background-color': buttonstatus, 'color':status}">
             <b><span>{{realminutes}}</span></b>
         </div>
-        <span>:</span>
-        <div class="seconds">
+        <span [ngStyle]="{'color': buttonstatus}">:</span>
+        <div class="seconds" [ngStyle]="{'background-color': buttonstatus, 'color':status}">
             <b><span>{{realseconds}}</span></b>
         </div>
     </div>
@@ -20,13 +20,13 @@
 
     <div class="buttons">
         <ng-container *ngIf="isrunning; else elseTemplate">
-            <button (click)="stop()"><b>PAUSE</b></button>
+            <button (click)="stop()" [ngStyle]="{'color': status, 'background-color':buttonstatus}"><b>PAUSE</b></button>
         </ng-container>
         <ng-template #elseTemplate>
-            <button (click)="start()"><b>RESUME</b></button>
+            <button (click)="start()" [ngStyle]="{'color': status, 'background-color':buttonstatus}"><b>RESUME</b></button>
         </ng-template>
         
-        <button><b>NEXT ROUND</b></button>
+        <button [ngStyle]="{'color': status, 'background-color':buttonstatus}"><b>NEXT ROUND</b></button>
     </div>
 
 </div>
