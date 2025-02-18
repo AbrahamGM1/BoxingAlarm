@@ -11,9 +11,6 @@ import { Subscription, interval } from 'rxjs';
 })
 export class AlarmComponent {
 
-  //Estos segundos son de la cuenta regresiva antes de que comienze el primer round o se salte un round.
-  firstseconds:number = 5;
-
   //Tiempo en minutos y segundos que tendra la alarma
   realminutes:number = 0;
   realseconds:number = 35;
@@ -48,13 +45,16 @@ export class AlarmComponent {
   //Boolean para el boton de pausa
   isrunning: boolean = true;
 
-  //Subscripción para los intervalos
+  //Boolean para aparecer el boton de reset cuando se acaben todos los rounds
+  finished: boolean = false;
+
+  //Subscripción para los intervalos del round
   private subscription!: Subscription;
 
   //la cantidad de rounds que estara en bucle
   //siempre habra 1 round menos de descanso porque cuando acaba el ultimo round
   //no habra necesidad de poner periodo de descanso porque se supone que ya acabaste de entrenar
-  rounds:number = 2;
+  rounds:number = 99;
   restrounds:number = this.rounds - 1;
   currentround:number = 1;
   
@@ -83,7 +83,7 @@ export class AlarmComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.start()
+    this.start(false)
   }
 
   ngOnDestroy(): void {
@@ -92,10 +92,19 @@ export class AlarmComponent {
     this.stop()
   }
 
+  start(isByPause:boolean){
 
-  start(){
+    if(isByPause && !this.isresting){
+      this.setGreenBackground()
+    }
 
+    if(isByPause && this.isresting){
+      this.setRedBackground()
+    }
+
+    //Para indicarle al boton de pausa si debe de mostrar "pause" o "resume"
     this.isrunning = true;
+
     this.subscription = interval(50).subscribe(() => {
 
     /* Cada que ya no queden segundos y quede por lo menos 1 minut
@@ -132,16 +141,12 @@ export class AlarmComponent {
 
     //Cuando quedan N cantidad de segundos se cambian todos los colores al tono amarillo
     if (this.realtime<=10) {
-      this.status.set(this.colors[1]);
-      this.buttonstatus.set(this.bcolors[1]);
-      this.bgstatus.set(this.bgcolors[1]);
+      this.setYellowBackground();
     }
 
     //Cuando queda menos del segundo se cambian todos los colores al tono rojo
     if (this.realtime<1 && this.currentround==this.rounds){
-      this.status.set(this.colors[3]);
-      this.buttonstatus.set(this.bcolors[3]);
-      this.bgstatus.set(this.bgcolors[3]);
+      this.setGrayBackground();
     }
     })
   }
@@ -155,9 +160,7 @@ export class AlarmComponent {
 
 
   changeToRest(){
-    this.status.set(this.colors[2]);
-    this.buttonstatus.set(this.bcolors[2]);
-    this.bgstatus.set(this.bgcolors[2]);
+    this.setRedBackground();
 
     //cambio de round
     this.realminutes = this.restminutes
@@ -170,9 +173,7 @@ export class AlarmComponent {
   }
 
   changeToActive(){
-    this.status.set(this.colors[0]);
-    this.buttonstatus.set(this.bcolors[0]);
-    this.bgstatus.set(this.bgcolors[0]);
+    this.setGreenBackground();
 
     //cambio de round
     this.realminutes = this.auxminutes
@@ -187,9 +188,7 @@ export class AlarmComponent {
 
     if (this.subscription) {
       this.subscription.unsubscribe();
-      this.status.set(this.colors[3]);
-      this.buttonstatus.set(this.bcolors[3]);
-      this.bgstatus.set(this.bgcolors[3]);
+      this.setGrayBackground();
 
       /**La condicion isrunning esta hecha para el boton de pausa
          de manera que mientras queden segundos del tiempo se pueda poner 
@@ -197,8 +196,44 @@ export class AlarmComponent {
          ejecute ninguna accion.*/
       if(this.realtime>0){
       this.isrunning = false;
+      } 
+
+      if(this.realtime<=0){
+        this.finished = true;
       }
     }
+  }
+
+  reset(){
+    this.finished = false;
+    this.currentround = 1;
+    this.changeToActive();
+    //para que ponga el background color verde como lo hace el boton pausa
+    this.start(true)
+  }
+
+  setGreenBackground(){
+    this.status.set(this.colors[0]);
+    this.buttonstatus.set(this.bcolors[0]);
+    this.bgstatus.set(this.bgcolors[0]);
+  }
+
+  setYellowBackground(){
+    this.status.set(this.colors[1]);
+    this.buttonstatus.set(this.bcolors[1]);
+    this.bgstatus.set(this.bgcolors[1]);
+  }
+
+  setRedBackground(){
+    this.status.set(this.colors[2]);
+    this.buttonstatus.set(this.bcolors[2]);
+    this.bgstatus.set(this.bgcolors[2]);
+  }
+
+  setGrayBackground(){
+    this.status.set(this.colors[3]);
+    this.buttonstatus.set(this.bcolors[3]);
+    this.bgstatus.set(this.bgcolors[3]);
   }
 
 }
