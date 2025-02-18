@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, Signal, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Subscription, interval } from 'rxjs';
+import { FormDataService } from '../../services/form-data.service';
 
 @Component({
   selector: 'app-alarm',
@@ -12,8 +13,8 @@ import { Subscription, interval } from 'rxjs';
 export class AlarmComponent {
 
   //Tiempo en minutos y segundos que tendra la alarma
-  realminutes:number = 0;
-  realseconds:number = 35;
+  realminutes:number = 2;
+  realseconds:number = 0;
 
   //Realtime es todos los minutos en segundos para hacer la conversion
   //del porcentaje de la gráfica que se va a ir reduciendo
@@ -22,8 +23,8 @@ export class AlarmComponent {
   onepercent: number = 100/this.realtime;
 
   //Tiempo en minutos y segundos de descanso
-  restminutes:number = 0;
-  restseconds:number = 30;
+  restminutes:number = 1;
+  restseconds:number = 0;
 
   //Mismo caso que Realtime, percentage y onepercent, solo que 
   //estas variables se enfocan al periodo de descanso del round, por eso el rest.
@@ -48,8 +49,12 @@ export class AlarmComponent {
   //Boolean para aparecer el boton de reset cuando se acaben todos los rounds
   finished: boolean = false;
 
+  //Boolean para mostrar en pantalla la cuenta regresiva
+  showcountdown: boolean = false;
+
   //Subscripción para los intervalos del round
   private subscription!: Subscription;
+  private subscriptionC!: Subscription;
 
   //la cantidad de rounds que estara en bucle
   //siempre habra 1 round menos de descanso porque cuando acaba el ultimo round
@@ -80,16 +85,49 @@ export class AlarmComponent {
   buttonstatus = signal(this.bcolors[0])
   bgstatus = signal(this.bgcolors[0])
 
+  //segundos para prepararse
+  countdown = 3;
+
+  constructor(private dataService:FormDataService){};
+
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    this.start(false)
+
+    /**
+    this.dataService.formData$.subscribe(data => {
+      if (data) {
+        this.rounds=data.rounds;
+        this.realminutes=data.minutes;
+        this.realseconds=data.seconds;
+        this.restminutes=data.restminutes;
+        this.restseconds=data.restseconds;
+
+        this.realtime = (this.realminutes*60)+(this.realseconds);
+        this.onepercent = 100/this.realtime;
+      }
+    }); */
+
+    this.startcountdown(false)
   }
 
   ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
+
     this.stop()
+  }
+
+  //isByPause se pide de parametro para pasarselo al start cuando le toque ejecutarse
+  startcountdown(isByPause:boolean){
+    this.showcountdown = true;
+
+    this.subscriptionC = interval(1000).subscribe(()=>{
+      this.countdown -=1;
+      if(this.countdown<=0){
+        this.start(isByPause);
+        this.countdown = 3;
+        this.showcountdown = false;
+        this.subscriptionC.unsubscribe();
+      }
+      
+    })
   }
 
   start(isByPause:boolean){
@@ -152,9 +190,11 @@ export class AlarmComponent {
   }
 
   goToNextRound(){
-    if(this.currentround<this.rounds){
+    if(this.currentround<this.rounds && this.showcountdown==false){
       this.currentround++;
+      this.subscription.unsubscribe();
       this.changeToActive();
+      this.startcountdown(false);
     }
   }
 
@@ -186,7 +226,7 @@ export class AlarmComponent {
 
   stop(){
 
-    if (this.subscription) {
+    if (this.subscription && this.showcountdown==false) {
       this.subscription.unsubscribe();
       this.setGrayBackground();
 

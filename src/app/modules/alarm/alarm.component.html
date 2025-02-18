@@ -1,6 +1,9 @@
 <div class="content" [ngStyle]="{'background-color': bgstatus()}">
 
     <div class="chart" [ngStyle]="{'background': 'conic-gradient(transparent calc((3.6deg)*'+percentage+'), '+status()+' 0deg)'}">
+        <div class="countdown">
+            <h1 [hidden]="!showcountdown">{{countdown}}</h1>
+        </div>
     </div>
 
     <div class="timer">
@@ -20,13 +23,13 @@
     <div class="buttons">
 
         <ng-container *ngIf="isrunning; else elseTemplate">
-            <button (click)="stop()" [ngStyle]="{'color': status(), 'background-color':buttonstatus()}"><b>PAUSE</b></button>
+            <button [disabled]="showcountdown" (click)="stop()" [ngStyle]="{'color': status(), 'background-color':buttonstatus()}"><b>PAUSE</b></button>
         </ng-container>
         <ng-template #elseTemplate>
-            <button (click)="start(true)" [ngStyle]="{'color': status(), 'background-color':buttonstatus()}"><b>RESUME</b></button>
+            <button [disabled]="showcountdown" (click)="startcountdown(true)" [ngStyle]="{'color': status(), 'background-color':buttonstatus()}"><b>RESUME</b></button>
         </ng-template>
 
-        <button (click)="goToNextRound()" [ngStyle]="{'color': status(), 'background-color':buttonstatus()}"><b>NEXT ROUND</b></button>
+        <button [disabled]="showcountdown" (click)="goToNextRound()" [ngStyle]="{'color': status(), 'background-color':buttonstatus()}"><b>NEXT ROUND</b></button>
     
     </div>
 
