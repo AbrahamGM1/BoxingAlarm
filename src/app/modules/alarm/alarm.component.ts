@@ -92,20 +92,30 @@ export class AlarmComponent {
 
   ngOnInit(): void {
 
-    /**
+    
     this.dataService.formData$.subscribe(data => {
       if (data) {
         this.rounds=data.rounds;
         this.realminutes=data.minutes;
         this.realseconds=data.seconds;
-        this.restminutes=data.restminutes;
-        this.restseconds=data.restseconds;
-
         this.realtime = (this.realminutes*60)+(this.realseconds);
         this.onepercent = 100/this.realtime;
-      }
-    }); */
 
+
+        this.restrounds=data.rounds-1;
+        this.restminutes=data.restminutes;
+        this.restseconds=data.restseconds;
+        this.resttime = (this.restminutes*60)+(this.restseconds);
+        this.restonepercent = 100/this.resttime;
+
+        this.auxminutes = this.realminutes;
+        this.auxseconds = this.realseconds;
+        this.auxpercentage = this.percentage;
+        this.auxtime = (this.realminutes*60)+(this.realseconds);
+        this.auxonepercent = this.onepercent;
+         
+      }
+    });
     this.startcountdown(false)
   }
 

@@ -32,10 +32,10 @@
             <div *ngIf="form.get('restseconds')?.invalid && form.get('restseconds')?.touched">
                 <small>Campo requerido y debe ser minimo 0 pero menor a 60</small> 
             </div>
-
-            <button type="submit" [disabled]="form.invalid">GO!</button>
-
-
         </div>
+        <div class="submit">
+            <button type="submit" [disabled]="form.invalid">START!</button>
+        </div>
+
         </form>
 </div>
