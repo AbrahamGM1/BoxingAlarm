@@ -3,34 +3,47 @@
         <form [formGroup]="form" (ngSubmit)="sendForm()">
         <div class="formrounds">
 
+
             <label for="rounds">Rounds</label>
-            <input type="number" id="rounds" formControlName="rounds">
-            <div *ngIf="form.get('rounds')?.invalid && form.get('rounds')?.touched">
-                <small>Campo requerido, debe ser mayor a 0 y menor a 100</small> 
+            <div class="inputnumber">
+                <input type="number" id="rounds" formControlName="rounds">
+                <div *ngIf="form.get('rounds')?.invalid && form.get('rounds')?.touched">
+                    <small>Ingrese un número en el rango de 1 a 99, sin puntos decimales</small> 
+                </div>
             </div>
 
             <label for="minutes">Minutes</label>
-            <input type="number" id="minutes" formControlName="minutes">
-            <div *ngIf="form.get('minutes')?.invalid && form.get('minutes')?.touched">
-                <small>Campo requerido y debe ser mayor a 0 y menor a 60</small> 
+            <div class="inputnumber">
+                <input type="number" id="minutes" formControlName="minutes">
+                <div *ngIf="form.get('minutes')?.invalid && form.get('minutes')?.touched">
+                    <small>Ingrese un número en el rango de 0 a 59, sin puntos decimales</small> 
+                </div>
             </div>
 
             <label for="seconds">Seconds</label>
-            <input type="number" id="seconds" formControlName="seconds">
-            <div *ngIf="form.get('seconds')?.invalid && form.get('seconds')?.touched">
-                <small>Campo requerido y debe ser mayor a 0 y menor a 60</small> 
+            <div class="inputnumber">
+                <input type="number" id="seconds" formControlName="seconds">
+                <div *ngIf="form.get('seconds')?.invalid && form.get('seconds')?.touched">
+                    <small>Ingrese un número en el rango de 0 a 59, sin puntos decimales</small> 
+                </div>
             </div>
+
 
             <label for="restminutes">Minutes to rest</label>
-            <input type="number" id="restminutes" formControlName="restminutes">
-            <div *ngIf="form.get('restminutes')?.invalid && form.get('restminutes')?.touched">
-                <small>Campo requerido y debe ser mayor a 0 y menor a 60 </small> 
+            <div class="inputnumber">
+                <input type="number" id="restminutes" formControlName="restminutes">
+                <div *ngIf="form.get('restminutes')?.invalid && form.get('restminutes')?.touched">
+                    <small>Ingrese un número en el rango de 0 a 59, sin puntos decimales</small> 
+                </div>
             </div>
 
+            
             <label for="restseconds">Seconds to rest</label>
-            <input type="number" id="restseconds" formControlName="restseconds">
+            <div class="inputnumber">
+                <input type="number" id="restseconds" formControlName="restseconds">
             <div *ngIf="form.get('restseconds')?.invalid && form.get('restseconds')?.touched">
-                <small>Campo requerido y debe ser minimo 0 pero menor a 60</small> 
+                <small>Ingrese un número en el rango de 0 a 59, sin puntos decimales</small> 
+            </div>
             </div>
         </div>
         <div class="submit">

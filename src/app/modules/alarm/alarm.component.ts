@@ -43,6 +43,11 @@ export class AlarmComponent {
   auxtime:number = (this.realminutes*60)+(this.realseconds);
   auxonepercent:number = this.onepercent;
 
+
+  //Estos son solo para mostrar los minutos que dura el descanso, no afectan en lo demas
+  auxrestminutes:number = 0;
+  auxrestseconds:number = 0;
+
   //Boolean para el boton de pausa
   isrunning: boolean = true;
 
@@ -72,7 +77,7 @@ export class AlarmComponent {
    * bcolors - el color de los botones y del fondo de los marcadores
    * bgcolors - el color del fondo de la aplicacion
    */
-  colors: string[]=['rgb(182, 255, 146)','rgb(254, 233, 161)', 'rgb(255, 129, 129)', 'rgb(211, 211, 211)']
+  colors: string[]=['rgb(198, 255, 170)','rgb(255, 237, 180)', 'rgb(255, 171, 171)', 'rgb(211, 211, 211)']
   bcolors: string[] = ['green', 'rgb(142, 128, 5)', 'rgb(150, 15, 15)', 'rgb(32, 32, 32)']
   bgcolors: string[]=['rgb(86, 189, 34)','rgb(255, 204, 36)', 'rgb(189, 20, 20)', 'rgb(101, 101, 101)']
 
@@ -92,27 +97,36 @@ export class AlarmComponent {
 
   ngOnInit(): void {
 
-    
+    //Recogemos y actualizamos todos los datos con 
+    //los que va a trabajar la alarma con los datos mandados
+    //en el componente del menú
     this.dataService.formData$.subscribe(data => {
       if (data) {
+
+        //Actualización de los datos "real"
         this.rounds=data.rounds;
         this.realminutes=data.minutes;
         this.realseconds=data.seconds;
         this.realtime = (this.realminutes*60)+(this.realseconds);
         this.onepercent = 100/this.realtime;
 
-
+        //Actualización de los datos de descanso
         this.restrounds=data.rounds-1;
         this.restminutes=data.restminutes;
         this.restseconds=data.restseconds;
         this.resttime = (this.restminutes*60)+(this.restseconds);
         this.restonepercent = 100/this.resttime;
 
+        //Actualización de los datos del auxiliar
         this.auxminutes = this.realminutes;
         this.auxseconds = this.realseconds;
         this.auxpercentage = this.percentage;
         this.auxtime = (this.realminutes*60)+(this.realseconds);
         this.auxonepercent = this.onepercent;
+
+        //Actualización de los datos del auxiliar de descanso
+        this.auxrestminutes = this.restminutes;
+        this.auxrestseconds = this.restseconds;
          
       }
     });
@@ -130,6 +144,11 @@ export class AlarmComponent {
 
     this.subscriptionC = interval(1000).subscribe(()=>{
       this.countdown -=1;
+      //Cuando el contador llega a 0, se activa el contador de los rounds
+      //junto con el estado de isByPause en caso de que ocupe cambio en los backgrounds,
+      //se reinicia el conteo para volverlo a activar ya sea que se le ponga pausa o se pulse el boton "next round",
+      //showcountdown se pone en false para quitar el el contador de la interfaz
+      //y finalmente cancelamos la suscripción a este intervalo
       if(this.countdown<=0){
         this.start(isByPause);
         this.countdown = 3;
@@ -153,7 +172,8 @@ export class AlarmComponent {
     //Para indicarle al boton de pausa si debe de mostrar "pause" o "resume"
     this.isrunning = true;
 
-    this.subscription = interval(50).subscribe(() => {
+    //Aqui comienza el ciclo de la alarma
+    this.subscription = interval(1000).subscribe(() => {
 
     /* Cada que ya no queden segundos y quede por lo menos 1 minut
     se restara un minuto y se sumaran esos 60 segundos */
