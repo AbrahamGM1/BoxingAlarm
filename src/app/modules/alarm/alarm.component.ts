@@ -13,7 +13,7 @@ import { FormDataService } from '../../services/form-data.service';
 export class AlarmComponent {
 
   //Tiempo en minutos y segundos que tendra la alarma
-  realminutes:number = 2;
+  realminutes:number = 3;
   realseconds:number = 0;
 
   //Realtime es todos los minutos en segundos para hacer la conversion
@@ -93,6 +93,7 @@ export class AlarmComponent {
   //segundos para prepararse
   countdown = 3;
 
+
   constructor(private dataService:FormDataService){};
 
   ngOnInit(): void {
@@ -102,7 +103,6 @@ export class AlarmComponent {
     //en el componente del menú
     this.dataService.formData$.subscribe(data => {
       if (data) {
-
         //Actualización de los datos "real"
         this.rounds=data.rounds;
         this.realminutes=data.minutes;
@@ -127,15 +127,48 @@ export class AlarmComponent {
         //Actualización de los datos del auxiliar de descanso
         this.auxrestminutes = this.restminutes;
         this.auxrestseconds = this.restseconds;
-         
+      } else {
+        const savedData = sessionStorage.getItem('formData');
+        if(savedData){
+        const newdata = JSON.parse(savedData);
+        //Actualización de los datos "real"
+        this.rounds=newdata.rounds;
+        this.realminutes=newdata.minutes;
+        this.realseconds=newdata.seconds;
+        this.realtime = (this.realminutes*60)+(this.realseconds);
+        this.onepercent = 100/this.realtime;
+
+        //Actualización de los datos de descanso
+        this.restrounds=newdata.rounds-1;
+        this.restminutes=newdata.restminutes;
+        this.restseconds=newdata.restseconds;
+        this.resttime = (this.restminutes*60)+(this.restseconds);
+        this.restonepercent = 100/this.resttime;
+
+        //Actualización de los datos del auxiliar
+        this.auxminutes = this.realminutes;
+        this.auxseconds = this.realseconds;
+        this.auxpercentage = this.percentage;
+        this.auxtime = (this.realminutes*60)+(this.realseconds);
+        this.auxonepercent = this.onepercent;
+
+        //Actualización de los datos del auxiliar de descanso
+        this.auxrestminutes = this.restminutes;
+        this.auxrestseconds = this.restseconds;
+        }
       }
     });
     this.startcountdown(false)
   }
 
   ngOnDestroy(): void {
+    if(this.subscription){
+      this.subscription.unsubscribe();
+    }
 
-    this.stop()
+    if(this.subscriptionC){
+      this.subscriptionC.unsubscribe();
+    }
   }
 
   //isByPause se pide de parametro para pasarselo al start cuando le toque ejecutarse
@@ -147,12 +180,14 @@ export class AlarmComponent {
       //Cuando el contador llega a 0, se activa el contador de los rounds
       //junto con el estado de isByPause en caso de que ocupe cambio en los backgrounds,
       //se reinicia el conteo para volverlo a activar ya sea que se le ponga pausa o se pulse el boton "next round",
-      //showcountdown se pone en false para quitar el el contador de la interfaz
+      //showcountdown se pone en false para quitar el el contador de la interfaz,
+      //se reproduce el sonido de la campana
       //y finalmente cancelamos la suscripción a este intervalo
       if(this.countdown<=0){
         this.start(isByPause);
         this.countdown = 3;
         this.showcountdown = false;
+        this.playSound();
         this.subscriptionC.unsubscribe();
       }
       
@@ -171,6 +206,7 @@ export class AlarmComponent {
 
     //Para indicarle al boton de pausa si debe de mostrar "pause" o "resume"
     this.isrunning = true;
+    
 
     //Aqui comienza el ciclo de la alarma
     this.subscription = interval(1000).subscribe(() => {
@@ -196,19 +232,23 @@ export class AlarmComponent {
     //Si ya no hay mas rounds detiene la alarma
     if (this.realtime<=0 && this.isresting==false) {
       if (this.currentround>=this.rounds) {
+        this.playSound();
         this.stop();
       } else{
+        this.playSound();
         this.changeToRest();
       }
     }
     //Si esta en periodo de descanso y se acaba el tiempo comienza el siguiente round
     if (this.realtime<=0 && this.isresting==true) {
       this.currentround++;
+      this.playSound()
       this.changeToActive();
     }
 
-    //Cuando quedan N cantidad de segundos se cambian todos los colores al tono amarillo
-    if (this.realtime<=10) {
+    //Cuando quedan 10 segundos o menos se cambian todos los colores al tono amarillo
+    if (this.realtime==10) {
+      this.playSound()
       this.setYellowBackground();
     }
 
@@ -217,6 +257,11 @@ export class AlarmComponent {
       this.setGrayBackground();
     }
     })
+  }
+
+  playSound(){
+    const audio = new Audio('assets/sounds/Blastwave_FX_BoxingBell.mp3');
+    audio.play();
   }
 
   goToNextRound(){
@@ -279,7 +324,7 @@ export class AlarmComponent {
     this.currentround = 1;
     this.changeToActive();
     //para que ponga el background color verde como lo hace el boton pausa
-    this.start(true)
+    this.startcountdown(true)
   }
 
   setGreenBackground(){

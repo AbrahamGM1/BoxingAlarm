@@ -1,5 +1,5 @@
 <div class="content">
-    <h1>BOXING ALARM</h1>
+    <h1>BOXING TIMER</h1>
         <form [formGroup]="form" (ngSubmit)="sendForm()">
         <div class="formrounds">
 
@@ -8,7 +8,7 @@
             <div class="inputnumber">
                 <input type="number" id="rounds" formControlName="rounds">
                 <div *ngIf="form.get('rounds')?.invalid && form.get('rounds')?.touched">
-                    <small>Ingrese un número en el rango de 1 a 99, sin puntos decimales</small> 
+                    <small>Enter a number in the range between 1 to 99, without decimal points</small> 
                 </div>
             </div>
 
@@ -16,7 +16,7 @@
             <div class="inputnumber">
                 <input type="number" id="minutes" formControlName="minutes">
                 <div *ngIf="form.get('minutes')?.invalid && form.get('minutes')?.touched">
-                    <small>Ingrese un número en el rango de 0 a 59, sin puntos decimales</small> 
+                    <small>Enter a number in the range between 1 to 59, without decimal points</small> 
                 </div>
             </div>
 
@@ -24,7 +24,7 @@
             <div class="inputnumber">
                 <input type="number" id="seconds" formControlName="seconds">
                 <div *ngIf="form.get('seconds')?.invalid && form.get('seconds')?.touched">
-                    <small>Ingrese un número en el rango de 0 a 59, sin puntos decimales</small> 
+                    <small>Enter a number in the range between 0 to 59, without decimal points</small> 
                 </div>
             </div>
 
@@ -33,7 +33,7 @@
             <div class="inputnumber">
                 <input type="number" id="restminutes" formControlName="restminutes">
                 <div *ngIf="form.get('restminutes')?.invalid && form.get('restminutes')?.touched">
-                    <small>Ingrese un número en el rango de 0 a 59, sin puntos decimales</small> 
+                    <small>Enter a number in the range between 1 to 59, without decimal points</small> 
                 </div>
             </div>
 
@@ -42,13 +42,18 @@
             <div class="inputnumber">
                 <input type="number" id="restseconds" formControlName="restseconds">
             <div *ngIf="form.get('restseconds')?.invalid && form.get('restseconds')?.touched">
-                <small>Ingrese un número en el rango de 0 a 59, sin puntos decimales</small> 
+                <small>Enter a number in the range between 0 to 59, without decimal points</small> 
             </div>
             </div>
         </div>
         <div class="submit">
             <button type="submit" [disabled]="form.invalid">START!</button>
         </div>
-
         </form>
+
 </div>
+<footer>
+    <div class="credits">
+        <p>Bell sound provided by Blastwave FX on <a href="https://www.zapsplat.com/?s=boxing+bell" target="_blank">ZapSplat</a></p>
+    </div>
+</footer>

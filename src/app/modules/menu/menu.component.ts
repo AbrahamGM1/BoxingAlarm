@@ -17,11 +17,11 @@ export class MenuComponent {
 
   constructor(private fb: FormBuilder, private dataService: FormDataService, private router:Router){
     this.form = fb.group({
-      rounds: [9,[Validators.required, Validators.min(1), Validators.max(99), Validators.pattern('^[^\.]+$')]],
+      rounds: [99,[Validators.required, Validators.min(1), Validators.max(99), Validators.pattern('^[^\.]+$')]],
       minutes: [3,[Validators.required, Validators.min(1), Validators.max(59), Validators.pattern('^[^\.]+$')]],
-      seconds: [10,[Validators.required, Validators.min(0), Validators.max(59), Validators.pattern('^[^\.]+$')]],
+      seconds: [0,[Validators.required, Validators.min(0), Validators.max(59), Validators.pattern('^[^\.]+$')]],
       restminutes: [1,[Validators.required, Validators.min(1), Validators.max(59), Validators.pattern('^[^\.]+$')]],
-      restseconds:  [10,[Validators.required, Validators.min(0), Validators.max(59), Validators.pattern('^[^\.]+$')]]
+      restseconds:  [0,[Validators.required, Validators.min(0), Validators.max(59), Validators.pattern('^[^\.]+$')]]
     })
   }
 
